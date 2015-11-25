@@ -46,12 +46,27 @@ public class Board {
     public void setBoardElement(int i, int j, int el){
         this.squares[i][j] = el;
     }
+    public int getNum_players(){
+        return num_players;
+    }
+    
+    public void setNum_players(int n){
+        this.num_players = n;
+    }
     
     public boolean isEnoughPlayer(){
-        if(Players.size()==num_players)
-            return true;
+        if(Players.size()>=num_players){
+            return true;}
         else
             return false;
+    }
+    
+    public ArrayList<Player> getPlayers(){
+        return this.Players;
+    }
+    
+    public void setPlayers(ArrayList<Player> p){
+        this.Players = p;
     }
     
     public Player getPlayer(int i){

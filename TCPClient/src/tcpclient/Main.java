@@ -7,6 +7,7 @@ package tcpclient;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Scanner;
 
 /**
  *
@@ -25,16 +26,17 @@ public class Main {
       try
       {
          Socket client = new Socket(serverName, port);
-         System.out.println("Just connected to " 
-		 + client.getRemoteSocketAddress());
+         InputStream inFromServer = client.getInputStream();
+         DataInputStream in = new DataInputStream(inFromServer);
+         System.out.println(in.readUTF());
+         
          OutputStream outToServer = client.getOutputStream();
          DataOutputStream out = new DataOutputStream(outToServer);
-         out.writeUTF("Hello from "
-                      + client.getLocalSocketAddress());
-         InputStream inFromServer = client.getInputStream();
-         DataInputStream in =
-                        new DataInputStream(inFromServer);
-         System.out.println("Server says " + in.readUTF());
+         Scanner input = new Scanner(System.in);
+         String s;
+         s = input.nextLine();
+         out.writeUTF(s);
+         
          client.close();
       }catch(IOException e)
       {

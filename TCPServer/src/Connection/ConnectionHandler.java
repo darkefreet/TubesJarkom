@@ -5,11 +5,10 @@
  */
 package Connection;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.net.Socket;
+import java.io.*;
+import java.net.*;
+import Game.*;
+import tcpserver.*;
 
 /**
  *
@@ -17,21 +16,28 @@ import java.net.Socket;
  */
 public class ConnectionHandler implements Runnable{
 
+    private int id;
     private Socket server;
     private String line,input;
     
-    public ConnectionHandler(Socket _server){
+    public ConnectionHandler(int _id,Socket _server){
         this.server = _server;
+        this.id = _id;
     }
     
     @Override
     public void run(){
         
         try{
-        DataInputStream in = new DataInputStream(server.getInputStream());
-        System.out.println(in.readUTF());
         DataOutputStream out = new DataOutputStream(server.getOutputStream());
-        out.writeUTF("Thank you for connecting to "+ server.getLocalSocketAddress() + "\nGoodbye!");
+        out.writeUTF("Please enter your name to play the game:");
+            
+        DataInputStream in = new DataInputStream(server.getInputStream());
+        String user = in.readUTF();
+        System.out.println(user+" has joined the game");
+        
+        Player player = new Player(this.id,user);
+        Main.Brd.addPlayer(player);
         server.close();
         
         } catch (IOException ioe) {
