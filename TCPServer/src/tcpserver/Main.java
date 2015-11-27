@@ -27,10 +27,10 @@ public class Main {
             Socket server;
             System.out.println("Starting the Game");
             
-            int i = 0;
+            int i = 1;
             
             //Waiting until there are enough number of players to start the game
-            while(i<Brd.getNum_players()){
+            while(i<=Brd.getNum_players()){
                 
                 server = listener.accept();
                 

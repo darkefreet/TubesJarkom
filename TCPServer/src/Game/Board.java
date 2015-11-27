@@ -77,4 +77,8 @@ public class Board {
         Players.add(A);
     }
     
+    public boolean isWin(){
+        return true;
+    }
+    
 }
