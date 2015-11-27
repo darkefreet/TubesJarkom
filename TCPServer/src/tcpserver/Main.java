@@ -54,6 +54,11 @@ public class Main {
             for(Player e:Brd.getPlayers()){
                 System.out.println("Players name: "+ e.getName());
             }
+            
+            while(!Brd.isWin()){
+            
+            }
+            
             listener.close();
         } catch (IOException ioe) {
           System.out.println("IOException on socket listen: " + ioe);

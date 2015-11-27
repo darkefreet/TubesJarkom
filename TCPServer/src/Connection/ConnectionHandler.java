@@ -8,6 +8,8 @@ package Connection;
 import java.io.*;
 import java.net.*;
 import Game.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import tcpserver.*;
 
 /**
@@ -25,6 +27,13 @@ public class ConnectionHandler implements Runnable{
         this.id = _id;
     }
     
+    private boolean isMyTurn(){
+        if(Main.Brd.getTurn()==this.id){
+            return true;
+        }
+        else return false;
+    }
+    
     @Override
     public void run(){
         
@@ -38,6 +47,40 @@ public class ConnectionHandler implements Runnable{
         
         Player player = new Player(this.id,user);
         Main.Brd.addPlayer(player);
+        
+        while(!Main.Brd.isEnoughPlayer()){
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return;
+            }
+        }
+        out.writeUTF("And The Game is On!");
+        
+        while(!Main.Brd.isWin()){
+            while(!isMyTurn() && !Main.Brd.isWin()){
+                try{
+                    Thread.sleep(1000);
+                }catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return;
+                }
+            }
+            if(!Main.Brd.isWin()){
+                out.writeUTF("Your Move :  ");
+                String move = in.readUTF();
+                move = move.split("[\\(\\)]")[1];
+                String[] coordinate = move.split(",");
+                int x = Integer.parseInt(coordinate[0]);
+                int y = Integer.parseInt(coordinate[1]);
+                //memasukkan move ke dalam tabel
+                Main.Brd.setBoardElement(x, y, this.id);
+                Main.Brd.nextMove();
+            }
+        }
+        
+        out.writeUTF("End");
         server.close();
         
         } catch (IOException ioe) {

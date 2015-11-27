@@ -37,6 +37,21 @@ public class Main {
          s = input.nextLine();
          out.writeUTF(s);
          
+         
+         System.out.println(in.readUTF());
+         boolean end = false;
+         while(!end){
+             String msg = in.readUTF();
+             if(msg.equals("End")){
+                end = true;
+             }
+             else{
+                System.out.println(msg);
+                s = input.nextLine();
+                out.writeUTF(s);
+             }
+         }
+         
          client.close();
       }catch(IOException e)
       {
