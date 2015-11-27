@@ -13,6 +13,8 @@ import java.util.ArrayList;
  */
 public class Board {
     
+    private int state = 0;
+    private int size;
     private int squares[][];
     private int num_players;
     private ArrayList<Player> Players;
@@ -20,19 +22,22 @@ public class Board {
     public String recent_moves;
     
     public Board(){
-        squares = new int[20][20];
-        for(int i = 0; i<20;i++){
-            for(int j = 0; j<20; j++){
+        size = 20;
+        squares = new int[size][size];
+        for(int i = 0; i<size;i++){
+            for(int j = 0; j<size; j++){
                 squares[i][j]=0;
             }
         }
+        state = 0;
         num_players = 3;
         Players = new ArrayList<Player>();
         recent_moves = "(0,0,0)";
         turn = 1;
     }
     
-    public Board(int size , int num_players){
+    public Board(int _size , int num_players){
+        size = _size;
         squares = new int[size][size];
         for(int i = 0; i<size;i++){
             for(int j = 0; j<size; j++){
@@ -40,6 +45,7 @@ public class Board {
             }
         }
         num_players = num_players;
+        state = 0;
         Players = new ArrayList<Player>();
         recent_moves = "(0,0,0)";
         turn = 1;
@@ -47,6 +53,9 @@ public class Board {
     
     public String getRecentMoves(){
         return recent_moves;
+    }
+    public int getState(){
+        return this.state;
     }
     
     public int getBoardElement(int i, int j){
@@ -97,10 +106,18 @@ public class Board {
     }
     
     public void nextMove(){
+        this.state++;
         this.turn++;
         if(turn>Players.size()){
             this.turn = 1;
         }
+    }
+    public boolean isMoveAllowed(int x, int y){
+        if(squares[x][y]==0 &&(x<size) && (y<size)){
+            return true;
+        }
+        else
+            return false;
     }
     
     public boolean isWin(){

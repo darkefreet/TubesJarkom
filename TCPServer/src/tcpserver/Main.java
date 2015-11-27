@@ -34,7 +34,7 @@ public class Main {
                 
                 server = listener.accept();
                 
-                ConnectionHandler connection= new ConnectionHandler(i,server);
+                ConnectionHandler connection= new ConnectionHandler(i,server,Brd.getNum_players());
                 Thread t = new Thread(connection);
                 t.start();
                 i++;
@@ -59,7 +59,7 @@ public class Main {
             
             }
             
-            listener.close();
+            listener.close(); 
         } catch (IOException ioe) {
           System.out.println("IOException on socket listen: " + ioe);
           ioe.printStackTrace();

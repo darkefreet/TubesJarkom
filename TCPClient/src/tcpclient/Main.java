@@ -5,6 +5,7 @@
  */
 package tcpclient;
 
+import Game.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
@@ -15,6 +16,7 @@ import java.util.Scanner;
  */
 public class Main {
 
+    private static int user_id;
     /**
      * @param args the command line arguments
      */
@@ -28,27 +30,57 @@ public class Main {
          Socket client = new Socket(serverName, port);
          InputStream inFromServer = client.getInputStream();
          DataInputStream in = new DataInputStream(inFromServer);
+         OutputStream outToServer = client.getOutputStream();
+         DataOutputStream out = new DataOutputStream(outToServer); 
+
+        //first sent message is the number of players
+         int num_users = Integer.parseInt(in.readUTF());
+         Board Brd = new Board(20,num_users);
+       
+         //print the order to enter username
          System.out.println(in.readUTF());
          
-         OutputStream outToServer = client.getOutputStream();
-         DataOutputStream out = new DataOutputStream(outToServer);
+         //get username input
          Scanner input = new Scanner(System.in);
          String s;
          s = input.nextLine();
          out.writeUTF(s);
          
-         
-         System.out.println(in.readUTF());
-         boolean end = false;
-         while(!end){
-             String msg = in.readUTF();
-             if(msg.equals("End")){
-                end = true;
+         //get user ID and insert players to the board
+         user_id = Integer.parseInt(in.readUTF());
+         for(int i = 1; i<=Brd.getNum_players();i++){
+             if(i==user_id){
+                 Player player = new Player(user_id,s);
+                 Brd.addPlayer(player);
              }
              else{
-                System.out.println(msg);
-                s = input.nextLine();
-                out.writeUTF(s);
+                 Player player = new Player(i,"Player "+i);
+                 Brd.addPlayer(player);
+             }
+         }
+         
+         //Game Start message
+         System.out.println(in.readUTF());
+         
+         while(!Brd.isWin()){
+             String move = in.readUTF();
+             if(!move.equals("Move")){
+                
+                move = move.split("[\\(\\)]")[1];
+                String[] coordinate = move.split(",");
+                int x = Integer.parseInt(coordinate[0]);
+                int y = Integer.parseInt(coordinate[1]);
+                int el = Integer.parseInt(coordinate[2]);
+                
+                System.out.println("Player with id = "+el+" choose "+"("+x+","+y+")");
+                Brd.setBoardElement(x, y, el);
+                Brd.nextMove();
+             }
+             else{
+                 String msg = in.readUTF();
+                 System.out.println(msg);
+                 s = input.nextLine();
+                 out.writeUTF(s);
              }
          }
          

@@ -19,12 +19,15 @@ import tcpserver.*;
 public class ConnectionHandler implements Runnable{
 
     private int id;
+    private int state;
+    private int num_players;
     private Socket server;
     private String line,input;
     
-    public ConnectionHandler(int _id,Socket _server){
+    public ConnectionHandler(int _id,Socket _server,int _num_players){
         this.server = _server;
         this.id = _id;
+        this.num_players= _num_players;
     }
     
     private boolean isMyTurn(){
@@ -33,21 +36,37 @@ public class ConnectionHandler implements Runnable{
         }
         else return false;
     }
+  
+    private boolean isStateChanged(){
+        if (state==Main.Brd.getState()){
+            return false;
+        }
+        
+        else{
+            this.state = Main.Brd.getState();
+            return true;
+        }
+    }
     
     @Override
     public void run(){
         
         try{
-        DataOutputStream out = new DataOutputStream(server.getOutputStream());
-        out.writeUTF("Please enter your name to play the game:");
             
+        //INITIALIZATION
+        DataOutputStream out = new DataOutputStream(server.getOutputStream());
+        //sending the number of players for client's board initialization
+        out.writeUTF(Integer.toString(this.num_players));
+        //asking the username
+        out.writeUTF("Please enter your name to play the game:");
         DataInputStream in = new DataInputStream(server.getInputStream());
         String user = in.readUTF();
         System.out.println(user+" has joined the game");
-        
         Player player = new Player(this.id,user);
         Main.Brd.addPlayer(player);
+        out.writeUTF(Integer.toString(this.id));
         
+        //WAITING UNTIL EVERY PLAYERS ARE READY
         while(!Main.Brd.isEnoughPlayer()){
             try {
                 Thread.sleep(1000);
@@ -59,15 +78,21 @@ public class ConnectionHandler implements Runnable{
         out.writeUTF("And The Game is On!");
         
         while(!Main.Brd.isWin()){
-            while(!isMyTurn() && !Main.Brd.isWin()){
-                try{
+            if(isStateChanged()){
+                out.writeUTF(Main.Brd.getRecentMoves());
+            }
+            
+            if(!isMyTurn()){
+                try {
                     Thread.sleep(1000);
-                }catch (InterruptedException e) {
+                } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     return;
                 }
             }
-            if(!Main.Brd.isWin()){
+            else{
+                //signal the client that it is their move
+                out.writeUTF("Move");
                 out.writeUTF("Your Move :  ");
                 String move = in.readUTF();
                 move = move.split("[\\(\\)]")[1];
@@ -80,7 +105,6 @@ public class ConnectionHandler implements Runnable{
             }
         }
         
-        out.writeUTF("End");
         server.close();
         
         } catch (IOException ioe) {
