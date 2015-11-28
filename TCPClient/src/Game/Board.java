@@ -18,8 +18,10 @@ public class Board {
     private int squares[][];
     private int num_players;
     private ArrayList<Player> Players;
-    public int turn;
-    public String recent_moves;
+    private boolean connected_players[];
+    private int turn;
+    private ArrayList<String> recent_moves;
+    
     
     public Board(){
         size = 20;
@@ -31,8 +33,14 @@ public class Board {
         }
         state = 0;
         num_players = 3;
+        connected_players = new boolean[num_players];
+        for(int i = 0;i<num_players;i++){
+            connected_players[i] = false; 
+        }
         Players = new ArrayList<Player>();
-        recent_moves = "(0,0,0)";
+        recent_moves = new ArrayList<String>();
+        String s = "(0,0,0)";
+        recent_moves.add(s);
         turn = 1;
     }
     
@@ -45,15 +53,26 @@ public class Board {
             }
         }
         num_players = num_players;
+        connected_players = new boolean[num_players];
+        for(int i = 0;i<num_players;i++){
+            connected_players[i] = false; 
+        }
         state = 0;
         Players = new ArrayList<Player>();
-        recent_moves = "(0,0,0)";
+        recent_moves = new ArrayList<String>();
+        String s = "(0,0,0)";
+        recent_moves.add(s);
         turn = 1;
     }
     
-    public String getRecentMoves(){
+    public ArrayList<String> getRecentMoves(){
         return recent_moves;
     }
+    
+    public String LastMove(){
+        return recent_moves.get(recent_moves.size()-1);
+    }
+    
     public int getState(){
         return this.state;
     }
@@ -64,7 +83,7 @@ public class Board {
     
     public void setBoardElement(int i, int j, int el){
         this.squares[i][j] = el;
-        recent_moves = "("+Integer.toString(i)+","+Integer.toString(j)+","+Integer.toString(el)+")";
+        recent_moves.add("("+Integer.toString(i)+","+Integer.toString(j)+","+Integer.toString(el)+")");
     }
     public int getNum_players(){
         return num_players;
@@ -118,6 +137,14 @@ public class Board {
         }
         else
             return false;
+    }
+    
+    public boolean getConnectedStatus(int id){
+        return connected_players[id-1];
+    }
+    
+    public void setConnectedStatus(int id, boolean status){
+        this.connected_players[id-1] = status;
     }
     
     public boolean isWin(){

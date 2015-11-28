@@ -18,16 +18,18 @@ import tcpserver.*;
  */
 public class ConnectionHandler implements Runnable{
 
+    private boolean reconnect;
     private int id;
     private int state;
     private int num_players;
     private Socket server;
     private String line,input;
     
-    public ConnectionHandler(int _id,Socket _server,int _num_players){
+    public ConnectionHandler(int _id,Socket _server,int _num_players,boolean reconnect){
         this.server = _server;
         this.id = _id;
         this.num_players= _num_players;
+        this.reconnect = reconnect;
     }
     
     private boolean isMyTurn(){
@@ -55,31 +57,44 @@ public class ConnectionHandler implements Runnable{
             
         //INITIALIZATION
         DataOutputStream out = new DataOutputStream(server.getOutputStream());
+        DataInputStream in = new DataInputStream(server.getInputStream());
+        
         //sending the number of players for client's board initialization
         out.writeUTF(Integer.toString(this.num_players));
-        //asking the username
-        out.writeUTF("Please enter your name to play the game:");
-        DataInputStream in = new DataInputStream(server.getInputStream());
-        String user = in.readUTF();
-        System.out.println(user+" has joined the game");
-        Player player = new Player(this.id,user);
-        Main.Brd.addPlayer(player);
-        out.writeUTF(Integer.toString(this.id));
         
-        //WAITING UNTIL EVERY PLAYERS ARE READY
-        while(!Main.Brd.isEnoughPlayer()){
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                return;
+        if(!reconnect){
+            out.writeUTF("New Player");
+            //asking the username
+            out.writeUTF("Please enter your name to play the game:");
+            String user = in.readUTF();
+            System.out.println(user+" has joined the game");
+            Player player = new Player(this.id,user);
+            Main.Brd.addPlayer(player);
+            out.writeUTF(Integer.toString(this.id));
+
+            //WAITING UNTIL EVERY PLAYERS ARE READY
+            while(!Main.Brd.isEnoughPlayer()){
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return;
+                }
             }
+            out.writeUTF("And The Game is On!");
         }
-        out.writeUTF("And The Game is On!");
-        
+        else{//reconnect
+            out.writeUTF("Reconnecting");
+            out.writeUTF(Integer.toString(Main.Brd.getRecentMoves().size()));
+            for(int i =1;i<=Main.Brd.getState();i++){
+                out.writeUTF(Main.Brd.getRecentMoves().get(i));
+            }
+            out.writeUTF("Reconnecting is done");
+        }
+          
         while(!Main.Brd.isWin()){
             if(isStateChanged()){
-                out.writeUTF(Main.Brd.getRecentMoves());
+                out.writeUTF(Main.Brd.LastMove());
             }
             
             if(!isMyTurn()){
@@ -108,8 +123,8 @@ public class ConnectionHandler implements Runnable{
         server.close();
         
         } catch (IOException ioe) {
-            System.out.println("IOException on socket listen: " + ioe);
-            ioe.printStackTrace();
+            System.out.println("Client with id " + this.id+" is disconnected.");
+            Main.Brd.setConnectedStatus(this.id, false);
         }
     }
 }

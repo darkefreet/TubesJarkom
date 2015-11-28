@@ -34,9 +34,10 @@ public class Main {
                 
                 server = listener.accept();
                 
-                ConnectionHandler connection= new ConnectionHandler(i,server,Brd.getNum_players());
+                ConnectionHandler connection= new ConnectionHandler(i,server,Brd.getNum_players(),false);
                 Thread t = new Thread(connection);
                 t.start();
+                Brd.setConnectedStatus(i, true);
                 i++;
                 //System.out.println("Halo1");
             }
@@ -56,7 +57,16 @@ public class Main {
             }
             
             while(!Brd.isWin()){
-            
+                for(int j = 0;j<Brd.getNum_players();j++){
+                    if(!Brd.getConnectedStatus(j+1)){
+                        Brd.setConnectedStatus(j+1, true);
+                        System.out.println("reconnecting to client "+(j+1)+"...");
+                        server = listener.accept();
+                        ConnectionHandler connection= new ConnectionHandler(j+1,server,Brd.getNum_players(),true);
+                        Thread t = new Thread(connection);
+                        t.start();
+                    }
+                }
             }
             
             listener.close(); 
