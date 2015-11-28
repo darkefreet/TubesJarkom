@@ -53,7 +53,10 @@ public class Main {
                 int el = Integer.parseInt(coordinate[2]);
                 
                 Brd.setBoardElement(x, y, el);
-                Brd.nextMove();
+                //not allowed for last element
+                if(i!=state-1){
+                    Brd.nextMove();
+                }
              }
          
          }else{
