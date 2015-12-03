@@ -25,6 +25,7 @@ public class Board {
     
     
     public Board(int id){
+        ID=id;
         squares = new int[size][size];
         for(int i = 0; i<size;i++){
             for(int j = 0; j<size; j++){
@@ -44,14 +45,15 @@ public class Board {
         turn = 1;
     }
     
-    public Board(int id, int num_players){
+    public Board(int id, int _num_players){
+        ID=id;
         squares = new int[size][size];
         for(int i = 0; i<size;i++){
             for(int j = 0; j<size; j++){
                 squares[i][j]=0;
             }
         }
-        num_players = num_players;
+        num_players = _num_players;
         connected_players = new boolean[num_players];
         for(int i = 0;i<num_players;i++){
             connected_players[i] = false; 
@@ -76,6 +78,14 @@ public class Board {
         return this.state;
     }
     
+    public String getPlayers(){
+        String s = null;
+        for (Player e : Players){
+            s = s+Integer.toString(e.getID())+","+e.getName()+" "; 
+        }
+        return s;
+    }
+    
     public int getBoardElement(int i, int j){
         return this.squares[i][j];
     }
@@ -93,13 +103,13 @@ public class Board {
     }
     
     public boolean isEnoughPlayer(){
-        if(Players.size()>=num_players){
-            return true;}
+        if(Players.size()>=num_players)
+            return true;
         else
             return false;
     }
     
-    public ArrayList<Player> getPlayers(){
+    public ArrayList<Player> getListPlayers(){
         return this.Players;
     }
     
@@ -108,7 +118,8 @@ public class Board {
     }
     
     public int getTurn(){
-        return turn;
+        //MENGEMBALIKAN ID PLAYER YANG MENJADI PEMAIN DI GAME TERSEBUT
+        return Players.get(turn-1).getID();
     }
     
     public void setTurn(int i){
@@ -126,7 +137,7 @@ public class Board {
     public void nextMove(){
         this.state++;
         this.turn++;
-        if(turn>Players.size()){
+        if(turn>num_players){
             this.turn = 1;
         }
     }

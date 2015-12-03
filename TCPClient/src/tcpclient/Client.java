@@ -17,12 +17,14 @@ import java.util.Scanner;
 public class Client {
     private static int user_id;
     private static String state = "0"; //merupakan status-status dari board yang ada pada room
-    private static String message = "START"; //berisikan message dari server
+    private static String message = "ALIVE"; //berisikan message dari server
     private static DataInputStream in;
     private static DataOutputStream out;
+    private static Board board;
     
     
     private static void updateRoom(String r_state){
+        //MENGUPDATE ROOM DAN MENAMPILKAN LIST ROOM
         if(r_state.equals(state)){
             //do nothing tidak ada room yang bertambah atau selesai
         }
@@ -66,6 +68,39 @@ public class Client {
                 updateRoom(room_state);
                 break;
             case "GAME":
+                int id_board = Integer.parseInt(in.readUTF());
+                int num_players = Integer.parseInt(in.readUTF());
+                board = new Board(id_board, num_players);
+                break;
+            case "START":
+                //GET ALL BOARD STATUS
+                System.out.println("Enough Players to join the game. Game has been started");
+                String BoardStatus []= in.readUTF().split(" ");
+                for (int i = 0; i<board.getNum_players();i++){
+                    String Player[] = BoardStatus[i].split(",");
+                    Player newPlayer = new Player(Integer.parseInt(Player[0]),Player[1]);
+                    board.addPlayer(newPlayer);
+                }
+                System.out.println("Users data has been loaded");
+                while(!board.getStatusWin()){
+                    String move = in.readUTF();
+                    if(!move.equals("MOVE")){
+                        move = move.split("[\\(\\)]")[1];
+                        String[] coordinate = move.split(",");
+                        int x = Integer.parseInt(coordinate[0]);
+                        int y = Integer.parseInt(coordinate[1]);
+                        int el = Integer.parseInt(coordinate[2]);
+
+                        System.out.println("Player with id = "+el+" choose "+"("+x+","+y+")");
+                        board.setBoardElement(x, y, el);
+                        board.nextMove();
+                     }
+                     else{
+                         System.out.println("Now is Your Move. Pick a move: ");
+                         s = input.nextLine();
+                         out.writeUTF(s);
+                     }
+                }
                 break;
             default:
                 //do nothing

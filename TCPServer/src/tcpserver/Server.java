@@ -24,6 +24,7 @@ public class Server {
         newBoard = new Board(id_room, num_players);
         room.addRoom(newBoard);
         id_room++;
+        //System.out.println(id_room);
     }
     /**
      * @param args the command line arguments
