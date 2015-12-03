@@ -110,7 +110,7 @@ public class ConnectionHandler implements Runnable{
                 while(!Server.room.getRoom(room_number).isEnoughPlayer()){
                     try {
                         Thread.sleep(5000);
-                        System.out.println(Server.room.getRoom(room_number).getListPlayers().size());
+                        //System.out.println(Server.room.getRoom(room_number).getListPlayers().size());
                     } catch (InterruptedException e) {
                          Thread.currentThread().interrupt();
                     return;
@@ -129,7 +129,7 @@ public class ConnectionHandler implements Runnable{
                     }
                     if(isMyTurn()){
                         //signal the client that it is their move
-                        System.out.println("masuk sini");
+                        //System.out.println("masuk sini");
                         out.writeUTF(yourmove);
                         String move = in.readUTF();
                         move = move.split("[\\(\\)]")[1];
