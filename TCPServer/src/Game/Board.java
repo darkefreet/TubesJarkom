@@ -12,19 +12,19 @@ import java.util.ArrayList;
  * @author Wilhelm
  */
 public class Board {
-    
+    private int ID;
     private int state = 0;
-    private int size;
+    private final int size = 20;
     private int squares[][];
     private int num_players;
     private ArrayList<Player> Players;
     private boolean connected_players[];
     private int turn;
+    private boolean won = false;
     private ArrayList<String> recent_moves;
     
     
-    public Board(){
-        size = 20;
+    public Board(int id){
         squares = new int[size][size];
         for(int i = 0; i<size;i++){
             for(int j = 0; j<size; j++){
@@ -44,8 +44,7 @@ public class Board {
         turn = 1;
     }
     
-    public Board(int _size , int num_players){
-        size = _size;
+    public Board(int id, int num_players){
         squares = new int[size][size];
         for(int i = 0; i<size;i++){
             for(int j = 0; j<size; j++){
@@ -146,8 +145,14 @@ public class Board {
     public void setConnectedStatus(int id, boolean status){
         this.connected_players[id-1] = status;
     }
+    public boolean getStatusWin(){
+        return won;
+    }
     
     public boolean isWin(){
+        if(false){
+            won = true;
+        }
         return false;
     }
         

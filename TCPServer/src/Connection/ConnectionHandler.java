@@ -18,62 +18,89 @@ import tcpserver.*;
  */
 public class ConnectionHandler implements Runnable{
 
-    private boolean reconnect;
-    private int id;
-    private int state;
-    private int num_players;
     private Socket server;
     private String line,input;
+    private Player player;
+    private String state;
+    private int room_number = 0;
     
-    public ConnectionHandler(int _id,Socket _server,int _num_players,boolean reconnect){
+    //nama-nama status
+    private final String init = "INIT";
+    private final String inHall = "HALL";
+    private final String roomUpdate = "UPDATE ROOM";
+    private final String inGame = "GAME";
+    
+    public ConnectionHandler(int _id,Socket _server){
         this.server = _server;
-        this.id = _id;
-        this.num_players= _num_players;
-        this.reconnect = reconnect;
-    }
-    
-    private boolean isMyTurn(){
-        if(Main.Brd.getTurn()==this.id){
-            return true;
-        }
-        else return false;
-    }
-  
-    private boolean isStateChanged(){
-        if (state==Main.Brd.getState()){
-            return false;
-        }
-        
-        else{
-            this.state = Main.Brd.getState();
-            return true;
-        }
+        this.player = new Player();
+        player.setID(_id);
     }
     
     @Override
     public void run(){
         
-        try{
-            
+        try{    
         //INITIALIZATION
         DataOutputStream out = new DataOutputStream(server.getOutputStream());
         DataInputStream in = new DataInputStream(server.getInputStream());
         
-        //sending the number of players for client's board initialization
-        out.writeUTF(Integer.toString(this.num_players));
+        //ASKING USERNAME
+        //mengirimkan status pada user
+        out.writeUTF(init);
+        String input = in.readUTF();
+        System.out.println(input+" is online");
+        player.setName(input);
+        state = inHall;
         
+        while(true){
+            if(state.equals(inHall)){
+                if(Server.needRoomUpdate){
+                    out.writeUTF(roomUpdate);
+                    out.writeUTF(Server.room.roomState());
+                }
+            
+                //ALREADY IN HALL, WAIT FOR ACTION<CREATE OR JOIN> A ROOM
+                out.writeUTF(inHall);
+                input =in.readUTF();
+                
+                String parse[] = input.split(" ");
+                if(parse[0].equals("CREATE")){
+                    //System.out.println(input);
+                    Server.CreateRoom(Integer.parseInt(parse[1]));
+                    //System.out.println(Server.room.roomState());
+                }
+                else if(parse[0].equals("JOIN")){//JOIN A ROOM
+                    //System.out.println(input);
+                    
+                    //Put the user in a room
+                    room_number = Integer.parseInt(parse[1]);
+                    Server.room.getRoom(room_number).addPlayer(this.player);
+                    state = inGame;
+                }
+                else{
+                    //do nothing.just refresh
+                }
+            }
+            else if(state.equals(inGame)){
+                out.writeUTF(inGame);
+                while(!Server.room.getRoom(room_number).isEnoughPlayer()){
+                    //do nothing
+                }
+                while(!Server.room.getRoom(room_number).getStatusWin()){
+                    out.writeUTF(Server.room.getRoom(room_number).LastMove());
+                }
+            }
+        }
+        
+        /*
         if(!reconnect){
-            out.writeUTF("New Player");
-            //asking the username
-            out.writeUTF("Please enter your name to play the game:");
-            String user = in.readUTF();
-            System.out.println(user+" has joined the game");
-            Player player = new Player(this.id,user);
-            Main.Brd.addPlayer(player);
+            
+            
+            Server.Brd.addPlayer(player);
             out.writeUTF(Integer.toString(this.id));
 
             //WAITING UNTIL EVERY PLAYERS ARE READY
-            while(!Main.Brd.isEnoughPlayer()){
+            while(!Server.Brd.isEnoughPlayer()){
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -85,16 +112,16 @@ public class ConnectionHandler implements Runnable{
         }
         else{//reconnect
             out.writeUTF("Reconnecting");
-            out.writeUTF(Integer.toString(Main.Brd.getRecentMoves().size()));
-            for(int i =1;i<=Main.Brd.getState();i++){
-                out.writeUTF(Main.Brd.getRecentMoves().get(i));
+            out.writeUTF(Integer.toString(Server.Brd.getRecentMoves().size()));
+            for(int i =1;i<=Server.Brd.getState();i++){
+                out.writeUTF(Server.Brd.getRecentMoves().get(i));
             }
             out.writeUTF("Reconnecting is done");
         }
           
-        while(!Main.Brd.isWin()){
+        while(!Server.Brd.isWin()){
             if(isStateChanged()){
-                out.writeUTF(Main.Brd.LastMove());
+                out.writeUTF(Server.Brd.LastMove());
             }
             
             if(!isMyTurn()){
@@ -115,16 +142,15 @@ public class ConnectionHandler implements Runnable{
                 int x = Integer.parseInt(coordinate[0]);
                 int y = Integer.parseInt(coordinate[1]);
                 //memasukkan move ke dalam tabel
-                Main.Brd.setBoardElement(x, y, this.id);
-                Main.Brd.nextMove();
+                Server.Brd.setBoardElement(x, y, this.id);
+                Server.Brd.nextMove();
             }
-        }
+        }*/
         
-        server.close();
+        //server.close();
         
         } catch (IOException ioe) {
-            System.out.println("Client with id " + this.id+" is disconnected.");
-            Main.Brd.setConnectedStatus(this.id, false);
+            System.out.println("Client with id " + this.player.getID()+" is disconnected.");
         }
     }
 }

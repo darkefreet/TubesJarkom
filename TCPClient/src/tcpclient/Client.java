@@ -14,9 +14,64 @@ import java.util.Scanner;
  *
  * @author Wilhelm
  */
-public class Main {
-
+public class Client {
     private static int user_id;
+    private static String state = "0"; //merupakan status-status dari board yang ada pada room
+    private static String message = "START"; //berisikan message dari server
+    private static DataInputStream in;
+    private static DataOutputStream out;
+    
+    
+    private static void updateRoom(String r_state){
+        if(r_state.equals(state)){
+            //do nothing tidak ada room yang bertambah atau selesai
+        }
+        else{
+            state = r_state;
+            String r[] = r_state.split(" ");
+            int num_rooms = Integer.parseInt(r[0]);
+            System.out.println("\nHere is the list of Rooms Available");
+            for(int i=1;i<=num_rooms;i++){
+                if (r[i].equals("1")){
+                    System.out.println("Room "+(i-1)+ "  - available\n");
+                }
+                else{
+                    System.out.println("Room "+(i-1)+ "  - has been closed\n");
+                }
+            }
+        }
+    }
+    
+    private static void React() throws IOException{
+        Scanner input = new Scanner(System.in);
+        String s;
+        String room_state;
+        switch (message) {
+            case "INIT":
+                System.out.println("Please input your username: ");
+                s=input.nextLine();
+                out.writeUTF(s);
+                break;
+            case "HALL":
+                System.out.println("You are now in the Main Room");
+                System.out.println("Choose something from the option by write the Option in parentheses!");
+                System.out.println("1.Create Room (CREATE) <num_of_players>");
+                System.out.println("2.Join Room (JOIN <room_number>)");
+                System.out.println("3.Refresh Room List (REFRESH)");
+                s=input.nextLine();
+                out.writeUTF(s);
+                break;
+            case "UPDATE ROOM":
+                room_state = in.readUTF();
+                updateRoom(room_state);
+                break;
+            case "GAME":
+                break;
+            default:
+                //do nothing
+        }
+    }
+   
     /**
      * @param args the command line arguments
      */
@@ -27,19 +82,18 @@ public class Main {
       int port = 8081;
       try
       {
-         Socket client = new Socket(serverName, port);
-         InputStream inFromServer = client.getInputStream();
-         DataInputStream in = new DataInputStream(inFromServer);
-         OutputStream outToServer = client.getOutputStream();
-         DataOutputStream out = new DataOutputStream(outToServer); 
-         
-         String move;
-         Scanner input = new Scanner(System.in);
-         String s;
-         //first sent message is the number of players
-         int num_users = Integer.parseInt(in.readUTF());
-         Board Brd = new Board(20,num_users);
-            
+          //INISIALISASI
+            Socket client = new Socket(serverName, port);
+            InputStream inFromServer = client.getInputStream();
+            OutputStream outToServer = client.getOutputStream();  
+            in = new DataInputStream(inFromServer);
+            out = new DataOutputStream(outToServer);
+
+            while(!message.equals("END")){
+                message = in.readUTF();
+                React();
+            }  
+          /*
          //RECONNECTING BY RECEIVING GAME STATES UNTIL THE POINT WHERE CONNECTION IS LOST
          if(in.readUTF().equals("Reconnecting")){
              System.out.println("Loading your data");
@@ -108,11 +162,11 @@ public class Main {
                  out.writeUTF(s);
              }
          }
-         
+         */
          client.close();
       }catch(IOException e)
       {
-         e.printStackTrace();
+         //e.printStackTrace();
       }
         
     }
