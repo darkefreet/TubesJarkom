@@ -161,9 +161,68 @@ public class Board {
         return won;
     }
     
-    public boolean isWin(){
-        if(false){
+    public void isWin(){
+        if(checkHorizontal(this.squares)){
+            won =  true;
+        } else if(checkVertical(this.squares)){
             won = true;
+        }else if(checkLD(this.squares)){
+            won = true;
+        }else if(checkRD(this.squares)){
+            won = true;
+        }
+        
+    }
+    
+    public  boolean checkHorizontal(int[][] a){
+        
+        for (int i =0; i<size;i++){
+            for(int j=0;j<=size-5;j++){
+                if ( a[i][j]!=0 && a[i][j]==a[i][j+1] && a[i][j]==a[i][j+2] && a[i][j]==a[i][j+3] && a[i][j]==a[i][j+4]){
+                    return true;
+                }
+            }
+            
+        }
+        return false;
+    }
+    
+    public boolean checkVertical(int[][] a){
+        
+        for (int j =0; j<size;j++){
+            for(int i=0;i<=size-5;i++){
+                if ( a[i][j]!=0 && a[i][j]==a[i][j] && a[i][j]==a[i][j] && a[i][j]==a[i+3][j] && a[i][j]==a[i+4][j]){
+                    return true;
+                }
+            }
+            
+        }
+        return false;
+    }
+    
+    public boolean checkLD(int[][] a){
+        
+        for (int i =0; i<=size-5;i++){
+            for(int j=0;j<=size-5;j++){
+                if ( a[i][j]!=0 && a[i][j]==a[i+1][j+1] && a[i][j]==a[i+2][j+2] && a[i][j]==a[i+3][j+3] && a[i][j]==a[i+4][j+4]){
+                    return true;
+                }
+            }
+            
+        }
+        return false;
+    }
+    
+    public boolean checkRD(int[][] a){
+        //System.out.println("Debug()");
+        for (int i =4; i<size;i++){
+            for(int j=0;j<=size-5;j++){
+                //System.out.println(a[i][j] +" " + a[i-1][j+1] +" " + a[i-2][j+2] +" " + a[i-3][j+3] +" " + a[i-4][j+4]);
+                if ( a[i][j]!=0 && a[i][j]==a[i-1][j+1] && a[i][j]==a[i-2][j+2] && a[i][j]==a[i-3][j+3] && a[i][j]==a[i-4][j+4]){
+                    return true;
+                }
+            }
+            
         }
         return false;
     }
