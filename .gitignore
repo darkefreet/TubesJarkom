@@ -19,3 +19,6 @@ hs_err_pid*
 >>>>>>> 9c4fd30b3a4d69ab920e2b35d0f1403d5745316f
 /Knock-knock/nbproject/private/
 /TCPClient/build/
+*.properties
+TCPClient/nbproject/build-impl.xml
+*.xml
