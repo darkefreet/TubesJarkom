@@ -34,12 +34,9 @@ public class Client {
             int num_rooms = Integer.parseInt(r[0]);
             System.out.println("\nHere is the list of Rooms Available");
             for(int i=1;i<=num_rooms;i++){
-                if (r[i].equals("1")){
-                    System.out.println("Room "+(i-1)+ "  - available\n");
-                }
-                else{
-                    System.out.println("Room "+(i-1)+ "  - has been closed\n");
-                }
+                String room_state[] = r[i].split(",");
+                System.out.println("Room "+(i-1)+" - number of players in game : "+room_state[1]);
+                System.out.println("Maximum number of players : "+room_state[0]+"\n");
             }
         }
     }
@@ -74,7 +71,7 @@ public class Client {
                 break;
             case "START":
                 //GET ALL BOARD STATUS
-                System.out.println("Enough Players to join the game. Game has been started");
+                System.out.println("Game has been started");
                 String BoardStatus []= in.readUTF().split(" ");
                 for (int i = 0; i<board.getNum_players();i++){
                     String Player[] = BoardStatus[i].split(",");

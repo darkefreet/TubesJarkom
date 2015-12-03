@@ -114,7 +114,7 @@ public class ConnectionHandler implements Runnable{
                     } catch (InterruptedException e) {
                          Thread.currentThread().interrupt();
                     return;
-                }
+                    }
                 }
                 
                 //System.out.println("Game Start");

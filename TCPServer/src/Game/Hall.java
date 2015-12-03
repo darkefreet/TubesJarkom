@@ -33,12 +33,7 @@ public class Hall {
     public String roomState(){
         String s = Integer.toString(Rooms.size())+" ";
         for (Board e : Rooms){
-            if(e.getStatusWin()){
-                s = s+"0 ";
-            }
-            else{
-                s = s+"1 ";
-            }
+            s=s+e.getNum_players()+","+e.getListPlayers().size()+" ";
         }
         return s;
     }

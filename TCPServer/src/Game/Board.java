@@ -22,7 +22,7 @@ public class Board {
     private int turn;
     private boolean won = false;
     private ArrayList<String> recent_moves;
-    
+   
     
     public Board(int id){
         ID=id;
@@ -94,6 +94,7 @@ public class Board {
         this.squares[i][j] = el;
         recent_moves.add("("+Integer.toString(i)+","+Integer.toString(j)+","+Integer.toString(el)+")");
     }
+    
     public int getNum_players(){
         return num_players;
     }
