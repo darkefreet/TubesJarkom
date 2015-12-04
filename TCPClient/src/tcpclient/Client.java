@@ -15,7 +15,9 @@ import java.util.Scanner;
  * @author Wilhelm
  */
 public class Client {
+    public static boolean button_pressed = false;
     private static int user_id;
+    public static String input;
     private static String state = "0"; //merupakan status-status dari board yang ada pada room
     private static String message = "ALIVE"; //berisikan message dari server
     private static DataInputStream in;
@@ -42,14 +44,21 @@ public class Client {
     }
     
     private static void React() throws IOException{
-        Scanner input = new Scanner(System.in);
-        String s;
         String room_state;
         switch (message) {
             case "INIT":
                 System.out.println("Please input your username: ");
-                s=input.nextLine();
-                out.writeUTF(s);
+                while(!button_pressed){
+                    try {
+                    Thread.sleep(1000);
+                        //System.out.println(Server.room.getRoom(room_number).getListPlayers().size());
+                    } catch (InterruptedException e) {
+                         Thread.currentThread().interrupt();
+                    return;
+                    }
+                }
+                button_pressed = false;
+                out.writeUTF(input);
                 break;
             case "HALL":
                 System.out.println("You are now in the Main Room");
@@ -57,8 +66,17 @@ public class Client {
                 System.out.println("1.Create Room (CREATE) <num_of_players>");
                 System.out.println("2.Join Room (JOIN <room_number>)");
                 System.out.println("3.Refresh Room List (REFRESH)");
-                s=input.nextLine();
-                out.writeUTF(s);
+                while(!button_pressed){
+                    try {
+                        Thread.sleep(1000);
+                            //System.out.println(Server.room.getRoom(room_number).getListPlayers().size());
+                        } catch (InterruptedException e) {
+                             Thread.currentThread().interrupt();
+                        return;
+                    }
+                }
+                button_pressed = false;
+                out.writeUTF(input);
                 break;
             case "UPDATE ROOM":
                 room_state = in.readUTF();
@@ -94,8 +112,17 @@ public class Client {
                      }
                      else{
                          System.out.println("Now is Your Move. Pick a move: ");
-                         s = input.nextLine();
-                         out.writeUTF(s);
+                         while(!button_pressed){
+                            try {
+                                Thread.sleep(1000);
+                                    //System.out.println(Server.room.getRoom(room_number).getListPlayers().size());
+                                } catch (InterruptedException e) {
+                                     Thread.currentThread().interrupt();
+                                return;
+                            }
+                        }
+                        button_pressed = false;
+                        out.writeUTF(input);
                      }
                 }
                 break;
@@ -115,6 +142,8 @@ public class Client {
       try
       {
           //INISIALISASI
+            WelcomePage welco = new WelcomePage();
+            welco.setVisible(true);
             Socket client = new Socket(serverName, port);
             InputStream inFromServer = client.getInputStream();
             OutputStream outToServer = client.getOutputStream();  
