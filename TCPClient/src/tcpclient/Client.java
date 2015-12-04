@@ -58,6 +58,7 @@ public class Client {
                     }
                 }
                 button_pressed = false;
+                
                 out.writeUTF(input);
                 break;
             case "HALL":

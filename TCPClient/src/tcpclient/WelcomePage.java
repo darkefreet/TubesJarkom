@@ -103,8 +103,11 @@ public class WelcomePage extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Client.input = jTextField1.getText();
-        Client.button_pressed = true;
+        String a = jTextField1.getText();
+        if(a!= null){
+            Client.input = a;
+            Client.button_pressed = true;
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
