@@ -140,6 +140,7 @@ public class ConnectionHandler implements Runnable{
                         //memasukkan move ke dalam tabel
                         Server.room.getRoom(room_number).setBoardElement(x, y, this.player.getID());
                         Server.room.getRoom(room_number).nextMove();
+                        
                     }
                 }
                 out.writeUTF(inHall);
