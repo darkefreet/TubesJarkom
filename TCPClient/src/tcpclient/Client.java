@@ -6,7 +6,6 @@
 package tcpclient;
 
 import Game.*;
-import UI.Lobby;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -142,7 +141,6 @@ public class Client {
     /**
      * @param args the command line arguments
      */
-    private static WelcomePage welco;
     public static void main(String[] args) {
         // TODO code application logic here
         
@@ -151,7 +149,7 @@ public class Client {
       try
       {
           //INISIALISASI
-
+            welco = new WelcomePage();
             welco.setVisible(true);
             Socket client = new Socket(serverName, port);
             InputStream inFromServer = client.getInputStream();
