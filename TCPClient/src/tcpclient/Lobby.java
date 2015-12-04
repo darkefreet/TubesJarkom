@@ -6,6 +6,7 @@
 package tcpclient;
 
 import UI.*;
+import javax.swing.MutableComboBoxModel;
 
 /**
  *
@@ -13,6 +14,7 @@ import UI.*;
  */
 public class Lobby extends javax.swing.JFrame {
 
+    private static int Nrooms;
     /**
      * Creates new form Lobby
      */
@@ -40,7 +42,12 @@ public class Lobby extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.setMaximumRowCount(20);
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Room List ");
 
@@ -52,6 +59,11 @@ public class Lobby extends javax.swing.JFrame {
         });
 
         jButton2.setText("Join");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Papyrus", 0, 36)); // NOI18N
         jLabel3.setText("GOMOKU");
@@ -108,9 +120,37 @@ public class Lobby extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        if(!jTextPane1.getText().isEmpty()){
+            Client.input = "CREATE "+jTextPane1.getText();
+            Client.button_pressed = true;
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        if(jComboBox1.getSelectedIndex() != -1){
+            String x = String.valueOf(jComboBox1.getSelectedItem());
+            Client.input = x;
+            Client.button_pressed = true;
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    public void UpdateRooms(int num_rooms){
+        if(num_rooms>Nrooms){
+            MutableComboBoxModel model = (MutableComboBoxModel)jComboBox1.getModel();
+            for(int i=1;i<=num_rooms;i++){
+                if(i>Nrooms){
+                    String Room = "JOIN "+(i-1);
+                    model.addElement(Room);
+                }
+            }
+        }
+        Nrooms = num_rooms;
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -142,6 +182,7 @@ public class Lobby extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+                Nrooms = 0;
                 new Lobby().setVisible(true);
             }
         });
