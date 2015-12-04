@@ -38,6 +38,7 @@ public class Client {
             state = r_state;
             String r[] = r_state.split(" ");
             num_rooms = Integer.parseInt(r[0]);
+            lobby.UpdateRooms(num_rooms);
             System.out.println("\nHere is the list of Rooms Available");
             for(int i=1;i<=num_rooms;i++){
                 String room_state[] = r[i].split(",");
@@ -90,6 +91,7 @@ public class Client {
                 updateRoom(room_state);
                 break;
             case "GAME":
+                System.out.println("Welcome to the Board");
                 int id_board = Integer.parseInt(in.readUTF());
                 int num_players = Integer.parseInt(in.readUTF());
                 board = new Board(id_board, num_players);
