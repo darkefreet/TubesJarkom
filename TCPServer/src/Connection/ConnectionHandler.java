@@ -27,11 +27,13 @@ public class ConnectionHandler implements Runnable{
     
     //nama-nama status
     private final String init = "INIT";
+    private final String reconnecting = "RECONNECTING";
     private final String inHall = "HALL";
     private final String roomUpdate = "UPDATE ROOM";
     private final String inGame = "GAME";
     private final String startGame = "START";
     private final String yourmove = "MOVE";
+    private boolean isReconnecting = false;
     
     public ConnectionHandler(int _id,Socket _server){
         this.server = _server;
@@ -61,6 +63,7 @@ public class ConnectionHandler implements Runnable{
         
         try{    
         //INITIALIZATION
+        
         DataOutputStream out = new DataOutputStream(server.getOutputStream());
         DataInputStream in = new DataInputStream(server.getInputStream());
         
@@ -72,8 +75,9 @@ public class ConnectionHandler implements Runnable{
         player.setName(input);
         out.writeUTF(Integer.toString(player.getID()));
         state = inHall;
+        Boolean done = false;
         
-        while(true){
+        while(!done){
             if(state.equals(inHall)){
                 if(Server.needRoomUpdate){
                     out.writeUTF(roomUpdate);
@@ -95,7 +99,6 @@ public class ConnectionHandler implements Runnable{
                     
                     //Put the user in a room
                     room_number = Integer.parseInt(parse[1]);
-                    Server.room.getRoom(room_number).addPlayer(this.player);
                     state = inGame;
                 }
                 else{
@@ -106,6 +109,33 @@ public class ConnectionHandler implements Runnable{
                 out.writeUTF(inGame);
                 out.writeUTF(Integer.toString(room_number));
                 out.writeUTF(Integer.toString(Server.room.getRoom(room_number).getNum_players()));
+                
+                //FOR RECONNECTING PURPOSE AND SPECTATORS
+                if(Server.room.getRoom(room_number).getListPlayers().size()>=Server.room.getRoom(room_number).getNum_players()){
+                    /*
+                    for(int i = 0;i <Server.room.getRoom(room_number).getNum_players();i++){
+                        if (Server.room.getRoom(room_number).getConnectedStatus(i)){
+                            isReconnecting = true;
+                            this.player.setID(Server.room.getRoom(room_number).getPlayer(i).getID());
+                            Server.room.getRoom(room_number).setConnectedStatus(i, true);
+                            break;
+                        }
+                    }
+                    if(!isReconnecting){
+                        
+                    }*/
+                    Server.room.getRoom(room_number).addPlayer(this.player);
+                    out.writeUTF(reconnecting);
+                    out.writeUTF(Integer.toString(player.getID()));
+                    out.writeUTF(Integer.toString(Server.room.getRoom(room_number).getRecentMoves().size()));
+                    for(int i =1;i<=Server.room.getRoom(room_number).getState();i++){
+                        out.writeUTF(Server.room.getRoom(room_number).getRecentMoves().get(i));
+                    }
+                }
+                else{
+                    Server.room.getRoom(room_number).addPlayer(this.player);
+                }
+                
                 //System.out.println("Jumlah pemain_maksimal : " +Server.room.getRoom(room_number).getNum_players());
                 //WAIT UNTIL THE SERVER HAS ENOUGH PLAYERS
                 while(!Server.room.getRoom(room_number).isEnoughPlayer()){
@@ -121,6 +151,13 @@ public class ConnectionHandler implements Runnable{
                 //System.out.println("Game Start");
                 //SEND THE BOARD DATA AFTER ENOUGH PLAYERS HAVE JOINED THE GAME
                 out.writeUTF(startGame);
+                if(!Server.room.getRoom(room_number).game_started){
+                    for(int i = 0;i <Server.room.getRoom(room_number).getNum_players();i++){
+                        System.out.println("Player connected");
+                        Server.room.getRoom(room_number).setConnectedStatus(i,true);
+                    }
+                }
+                Server.room.getRoom(room_number).game_started = true;
                 out.writeUTF(Server.room.getRoom(room_number).getPlayers());
                 
                 //PLAYERS CANNOT GET OUT BEFORE THE BOARD IS WON
@@ -217,10 +254,17 @@ public class ConnectionHandler implements Runnable{
             }
         }*/
         
-        //server.close();
+        server.close();
         
         } catch (IOException ioe) {
-            System.out.println("Client with id " + this.player.getID()+" is disconnected.");
+            /*
+            for(int i = 0;i <Server.room.getRoom(room_number).getNum_players();i++){
+                if(Server.room.getRoom(room_number).getPlayer(i).getID()==player.getID()){
+                    Server.room.getRoom(room_number).setConnectedStatus(i,false);
+                    break;
+                }
+            }*/
+            System.out.println("Client with id " + this.player.getID()+" is disconnected from room.");
         }
     }
 }

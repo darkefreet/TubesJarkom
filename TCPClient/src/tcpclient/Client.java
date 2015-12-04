@@ -102,11 +102,32 @@ public class Client {
                 int num_players = Integer.parseInt(in.readUTF());
                 board = new Board(id_board, num_players);
                 break;
+                
+            case "RECONNECTING":
+                System.out.println("Loading your data");
+                user_id = Integer.parseInt(in.readUTF());
+                int state = Integer.parseInt(in.readUTF());
+                for(int i =1;i<state;i++){
+                   String move = in.readUTF();
+                   move = move.split("[\\(\\)]")[1];
+                   String[] coordinate = move.split(",");
+                   int x = Integer.parseInt(coordinate[0]);
+                   int y = Integer.parseInt(coordinate[1]);
+                   int el = Integer.parseInt(coordinate[2]);
+                   board.setBoardElement(x, y, el);
+                   //not allowed for last element
+                   if(i!=state-1){
+                       board.nextMove();
+                   }
+                }
+                jf.refresh();
+                break;
             case "START":
                 //GET ALL BOARD STATUS
                 System.out.println("Game has been started");
                 lobby.setVisible(false);
-                jf = new NewJFrame(Name);
+                
+                jf.setTitle(Name);
                 jf.setVisible(true);
                 String BoardStatus []= in.readUTF().split(" ");
                 for (int i = 0; i<board.getNum_players();i++){
@@ -178,6 +199,7 @@ public class Client {
           //INISIALISASI
             welco = new WelcomePage();
             welco.setVisible(true);
+            jf = new NewJFrame(Name);
             Socket client = new Socket(serverName, port);
             InputStream inFromServer = client.getInputStream();
             OutputStream outToServer = client.getOutputStream();  

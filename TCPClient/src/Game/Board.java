@@ -90,7 +90,7 @@ public class Board {
     
     public void setBoardElement(int i, int j, int el){
         this.squares[i][j] = el;
-        recent_moves.add("("+Integer.toString(i)+","+Integer.toString(j)+","+Integer.toString(el)+")");
+        //recent_moves.add("("+Integer.toString(i)+","+Integer.toString(j)+","+Integer.toString(el)+")");
     }
     public int getNum_players(){
         return num_players;

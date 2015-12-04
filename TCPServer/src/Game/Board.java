@@ -21,6 +21,7 @@ public class Board {
     private boolean connected_players[];
     private int turn;
     private boolean won = false;
+    public boolean game_started = false;
     private ArrayList<String> recent_moves;
    
     
@@ -152,11 +153,11 @@ public class Board {
     }
     
     public boolean getConnectedStatus(int id){
-        return connected_players[id-1];
+        return connected_players[id];
     }
     
     public void setConnectedStatus(int id, boolean status){
-        this.connected_players[id-1] = status;
+        this.connected_players[id] = status;
     }
     public boolean getStatusWin(){
         return won;
