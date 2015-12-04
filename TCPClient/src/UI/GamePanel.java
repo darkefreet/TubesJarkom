@@ -67,7 +67,6 @@ public class GamePanel extends JPanel implements MouseListener {
             Point p = (Point) (((JLabel)me.getSource()).getClientProperty("Location"));
             Client.input = "("+p.x+","+p.y+")";
             Client.button_pressed = true;     
-            
         }
     }
 

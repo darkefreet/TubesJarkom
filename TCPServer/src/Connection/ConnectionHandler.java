@@ -125,6 +125,13 @@ public class ConnectionHandler implements Runnable{
                 
                 //PLAYERS CANNOT GET OUT BEFORE THE BOARD IS WON
                 while(!Server.room.getRoom(room_number).getStatusWin()){
+                    try {
+                        Thread.sleep(1000);
+                            //System.out.println(Server.room.getRoom(room_number).getListPlayers().size());
+                        } catch (InterruptedException e) {
+                             Thread.currentThread().interrupt();
+                        return;
+                        }
                     if(isStateChanged()){
                         out.writeUTF(Server.room.getRoom(room_number).LastMove());
                     }
@@ -133,12 +140,13 @@ public class ConnectionHandler implements Runnable{
                         //System.out.println("masuk sini");
                         out.writeUTF(yourmove);
                         String move = in.readUTF();
+                        //System.out.println(Server.room.getRoom(room_number).getTurn()+" "+move);
                         move = move.split("[\\(\\)]")[1];
                         String[] coordinate = move.split(",");
                         int x = Integer.parseInt(coordinate[0]);
                         int y = Integer.parseInt(coordinate[1]);
                         //memasukkan move ke dalam tabel
-                        Server.room.getRoom(room_number).setBoardElement(x, y, this.player.getID());
+                        Server.room.getRoom(room_number).setBoardElement(x, y, Server.room.getRoom(room_number).getTurn());
                         Server.room.getRoom(room_number).nextMove();
                     }
                 }

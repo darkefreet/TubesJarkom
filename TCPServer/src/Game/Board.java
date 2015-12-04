@@ -119,6 +119,7 @@ public class Board {
     }
     
     public int getTurn(){
+        if(turn > num_players) turn = 1;
         //MENGEMBALIKAN ID PLAYER YANG MENJADI PEMAIN DI GAME TERSEBUT
         return Players.get(turn-1).getID();
     }
