@@ -27,6 +27,9 @@ public class NewJFrame extends javax.swing.JFrame {
         super(playerName);
         initComponents();
     }
+    public void refresh(){
+        gamePanel2.refresh();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.

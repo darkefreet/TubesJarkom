@@ -6,6 +6,7 @@
 package tcpclient;
 
 import Game.*;
+import UI.NewJFrame;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -16,16 +17,19 @@ import java.util.ArrayList;
  */
 public class Client {
     public static boolean button_pressed = false;
-    private static int user_id;
+    public static boolean canMove = false;
+    public static int user_id;
     public static String input;
     private static String state = "0"; //merupakan status-status dari board yang ada pada room
     private static String message = "ALIVE"; //berisikan message dari server
     private static DataInputStream in;
     private static DataOutputStream out;
-    private static Board board;
+    public static Board board;
+    private static String Name;
     
     private static WelcomePage welco;
     private static Lobby lobby;
+    private static NewJFrame jf;
     public static int num_rooms;
     
     
@@ -64,9 +68,11 @@ public class Client {
                 }
                 button_pressed = false;
                 out.writeUTF(input);
+                Name = input;
                 welco.setVisible(false);
                 lobby = new Lobby();
                 lobby.setVisible(true);
+                user_id = Integer.parseInt(in.readUTF());
                 break;
             case "HALL":
                 System.out.println("You are now in the Main Room");
@@ -99,6 +105,9 @@ public class Client {
             case "START":
                 //GET ALL BOARD STATUS
                 System.out.println("Game has been started");
+                lobby.setVisible(false);
+                jf = new NewJFrame(Name);
+                jf.setVisible(true);
                 String BoardStatus []= in.readUTF().split(" ");
                 for (int i = 0; i<board.getNum_players();i++){
                     String Player[] = BoardStatus[i].split(",");
@@ -109,6 +118,7 @@ public class Client {
                 while(!board.getStatusWin()){
                     String move = in.readUTF();
                     if(!move.equals("MOVE")){
+                        canMove = false;
                         move = move.split("[\\(\\)]")[1];
                         String[] coordinate = move.split(",");
                         int x = Integer.parseInt(coordinate[0]);
@@ -117,9 +127,11 @@ public class Client {
 
                         System.out.println("Player with id = "+el+" choose "+"("+x+","+y+")");
                         board.setBoardElement(x, y, el);
+                        jf.refresh();
                         board.nextMove();
                      }
                      else{
+                        canMove = true;
                          System.out.println("Now is Your Move. Pick a move: ");
                          while(!button_pressed){
                             try {

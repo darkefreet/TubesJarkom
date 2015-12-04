@@ -16,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
+import tcpclient.Client;
 
 /**
  *
@@ -49,11 +50,25 @@ public class GamePanel extends JPanel implements MouseListener {
         setVisible(true);
         setSize(BOARDDIMENSION,BOARDDIMENSION);
     }
- 
+    
+    public void refresh(){
+        for( int i = 0; i < DIMENSION; i++){
+            for (int j = 0 ; j < DIMENSION ; j++){
+                if (Client.board.getBoardElement(i, j)!=0)
+                al.get(i).get(j).setText(Integer.toString(Client.board.getBoardElement(i, j)));
+            }
+        }
+    }
+    
     @Override
     public void mouseClicked(MouseEvent me) {
-        ((JLabel)me.getSource()).setText("X");
-        
+        if(Client.canMove){
+            ((JLabel)me.getSource()).setText(Integer.toString(Client.user_id));
+            Point p = (Point) (((JLabel)me.getSource()).getClientProperty("Location"));
+            Client.input = "("+p.x+","+p.y+")";
+            Client.button_pressed = true;     
+            
+        }
     }
 
     @Override
