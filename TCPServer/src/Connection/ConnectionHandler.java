@@ -133,7 +133,13 @@ public class ConnectionHandler implements Runnable{
                         return;
                         }
                     if(isStateChanged()){
-                        out.writeUTF(Server.room.getRoom(room_number).LastMove());
+                        if(Server.room.getRoom(room_number).isWin()){
+                            out.writeUTF("WIN");
+                            out.writeUTF(Server.room.getRoom(room_number).LastMove());
+                            break;
+                        }else{
+                            out.writeUTF(Server.room.getRoom(room_number).LastMove());
+                        }
                     }
                     if(isMyTurn()){
                         //signal the client that it is their move
@@ -150,6 +156,7 @@ public class ConnectionHandler implements Runnable{
                         Server.room.getRoom(room_number).nextMove();
                     }
                 }
+                out.writeUTF("The winner is "+Server.room.getRoom(room_number).getLastUser());
                 out.writeUTF(inHall);
             }
         }

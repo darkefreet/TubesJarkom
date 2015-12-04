@@ -162,7 +162,8 @@ public class Board {
         return won;
     }
     
-    public void isWin(){
+    public boolean isWin(){
+        won = false;
         if(checkHorizontal(this.squares)){
             won =  true;
         } else if(checkVertical(this.squares)){
@@ -172,7 +173,20 @@ public class Board {
         }else if(checkRD(this.squares)){
             won = true;
         }
-        
+        return won;
+    }
+    
+    public String getLastUser(){
+        String move = LastMove();
+        move = move.split("[\\(\\)]")[1];
+        String[] coordinate = move.split(",");
+        int el = Integer.parseInt(coordinate[2]);
+        for(int i = 0;i<Players.size();i++){
+            if(el==Players.get(i).getID()){
+                return Players.get(i).getName();
+            }
+        }
+        return null;
     }
     
     public  boolean checkHorizontal(int[][] a){

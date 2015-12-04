@@ -139,6 +139,9 @@ public class Board {
             this.turn = 1;
         }
     }
+    public void setWin(){
+        won = true;
+    }
     
     public boolean isMoveAllowed(int x, int y){
         if(squares[x][y]==0 &&(x<size) && (y<size)){

@@ -157,8 +157,7 @@ public class Lobby extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         if(jComboBox1.getSelectedIndex() != -1){
-            String x = "Refresh";
-            Client.input = x;
+            Client.input = "REFRESH";
             Client.button_pressed = true;
         }
     }//GEN-LAST:event_jButton3ActionPerformed

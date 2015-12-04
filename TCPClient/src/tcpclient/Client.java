@@ -116,7 +116,18 @@ public class Client {
                 }
                 System.out.println("Users data has been loaded");
                 while(!board.getStatusWin()){
+                    try {
+                        Thread.sleep(1000);
+                            //System.out.println(Server.room.getRoom(room_number).getListPlayers().size());
+                        } catch (InterruptedException e) {
+                             Thread.currentThread().interrupt();
+                        return;
+                    }
                     String move = in.readUTF();
+                    if(move.equals("WIN")){
+                        board.setWin();
+                        move = in.readUTF();
+                    }
                     if(!move.equals("MOVE")){
                         canMove = false;
                         move = move.split("[\\(\\)]")[1];
@@ -129,15 +140,7 @@ public class Client {
                         board.setBoardElement(x, y, el);
                         jf.refresh();
                         board.nextMove();
-                     }
-                     else{
-                        try {
-                            Thread.sleep(2000);
-                                //System.out.println(Server.room.getRoom(room_number).getListPlayers().size());
-                            } catch (InterruptedException e) {
-                                 Thread.currentThread().interrupt();
-                            return;
-                        }
+                     } else{
                         canMove = true;
                          System.out.println("Now is Your Move. Pick a move: ");
                          while(!button_pressed){
@@ -154,6 +157,8 @@ public class Client {
                         canMove = false;
                      }
                 }
+                String win_message = in.readUTF(); 
+                System.out.println(win_message);
                 break;
             default:
                 //do nothing
