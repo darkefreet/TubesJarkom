@@ -213,7 +213,7 @@ public class Client {
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
         
-      String serverName = "localhost";
+      String serverName = args[0];
       int port = 8081;
       try
       {
