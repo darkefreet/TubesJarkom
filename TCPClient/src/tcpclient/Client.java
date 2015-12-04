@@ -9,7 +9,7 @@ import Game.*;
 import UI.Lobby;
 import java.io.*;
 import java.net.Socket;
-import java.util.Scanner;
+import java.util.ArrayList;
 
 /**
  *
@@ -25,6 +25,10 @@ public class Client {
     private static DataOutputStream out;
     private static Board board;
     
+    private static WelcomePage welco;
+    private static Lobby lobby;
+    public static int num_rooms;
+    
     
     private static void updateRoom(String r_state){
         //MENGUPDATE ROOM DAN MENAMPILKAN LIST ROOM
@@ -34,7 +38,7 @@ public class Client {
         else{
             state = r_state;
             String r[] = r_state.split(" ");
-            int num_rooms = Integer.parseInt(r[0]);
+            num_rooms = Integer.parseInt(r[0]);
             System.out.println("\nHere is the list of Rooms Available");
             for(int i=1;i<=num_rooms;i++){
                 String room_state[] = r[i].split(",");
@@ -59,10 +63,10 @@ public class Client {
                     }
                 }
                 button_pressed = false;
-                welco.setVisible(false);
-                Lobby l = new Lobby();
-                l.setVisible(true);
                 out.writeUTF(input);
+                welco.setVisible(false);
+                lobby = new Lobby();
+                lobby.setVisible(true);
                 break;
             case "HALL":
                 System.out.println("You are now in the Main Room");
@@ -147,7 +151,7 @@ public class Client {
       try
       {
           //INISIALISASI
-             welco = new WelcomePage();
+
             welco.setVisible(true);
             Socket client = new Socket(serverName, port);
             InputStream inFromServer = client.getInputStream();
