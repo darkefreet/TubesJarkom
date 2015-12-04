@@ -22,11 +22,9 @@ public class Board {
     private boolean connected_players[];
     private int turn;
     private boolean won = false;
-<<<<<<< HEAD
+
     public boolean game_started = false;
-=======
     private Point idx1,idx2,idx3,idx4,idx5; // Point to store winning board
->>>>>>> 73373bbc72c407acf3841dcbc52e78564fe59a45
     private ArrayList<String> recent_moves;
    
     
@@ -42,7 +40,7 @@ public class Board {
         num_players = 3;
         connected_players = new boolean[num_players];
         for(int i = 0;i<num_players;i++){
-            connected_players[i] = false; 
+            connected_players[i] = true; 
         }
         Players = new ArrayList<Player>();
         recent_moves = new ArrayList<String>();
@@ -62,7 +60,7 @@ public class Board {
         num_players = _num_players;
         connected_players = new boolean[num_players];
         for(int i = 0;i<num_players;i++){
-            connected_players[i] = false; 
+            connected_players[i] = true; 
         }
         state = 0;
         Players = new ArrayList<Player>();

@@ -29,13 +29,14 @@ public class NewJFrame extends javax.swing.JFrame {
         initComponents();
         String s = "<html>";
         s+="bos";
+        /*
         for (int i = 0 ; i < Client.board.getListPlayers().size(); i++ ){
             s+=Client.board.getListPlayers().get(i).getName();
             s+="<br";
         }
         s +="</html";
         jLabel1.setText(s);
-        System.out.println(s);
+        System.out.println(s);*/
         jButton1.setVisible(false);
     }
     
