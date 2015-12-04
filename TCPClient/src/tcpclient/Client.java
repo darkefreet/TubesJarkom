@@ -6,6 +6,7 @@
 package tcpclient;
 
 import Game.*;
+import UI.Lobby;
 import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
@@ -58,7 +59,9 @@ public class Client {
                     }
                 }
                 button_pressed = false;
-                
+                welco.setVisible(false);
+                Lobby l = new Lobby();
+                l.setVisible(true);
                 out.writeUTF(input);
                 break;
             case "HALL":
@@ -135,6 +138,7 @@ public class Client {
     /**
      * @param args the command line arguments
      */
+    private static WelcomePage welco;
     public static void main(String[] args) {
         // TODO code application logic here
         
@@ -143,7 +147,7 @@ public class Client {
       try
       {
           //INISIALISASI
-            WelcomePage welco = new WelcomePage();
+             welco = new WelcomePage();
             welco.setVisible(true);
             Socket client = new Socket(serverName, port);
             InputStream inFromServer = client.getInputStream();

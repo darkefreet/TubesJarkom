@@ -5,6 +5,8 @@
  */
 package tcpclient;
 
+import UI.Lobby;
+
 /**
  *
  * @author Wilhelm
@@ -109,6 +111,7 @@ public class WelcomePage extends javax.swing.JFrame {
             Client.input = jTextField1.getText();
             Client.button_pressed = true;
         }
+        this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
