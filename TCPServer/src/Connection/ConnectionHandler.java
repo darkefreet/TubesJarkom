@@ -70,6 +70,7 @@ public class ConnectionHandler implements Runnable{
         String input = in.readUTF();
         System.out.println(input+" is online");
         player.setName(input);
+        out.writeUTF(Integer.toString(player.getID()));
         state = inHall;
         
         while(true){
