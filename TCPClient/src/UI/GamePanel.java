@@ -5,6 +5,7 @@
  */
 package UI;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Point;
@@ -60,13 +61,26 @@ public class GamePanel extends JPanel implements MouseListener {
         }
     }
     
+    public void showWin(String input){
+        ArrayList<Integer> list = new ArrayList<>();
+        for (String s : input.split("\\s"))  
+        {  
+           list.add(Integer.parseInt(s));  
+        }
+        for(int i = 0 ; i < list.size() ; i+=2){
+            al.get(list.get(i)).get(list.get(i+1)).setBackground(Color.red);
+            al.get(list.get(i)).get(list.get(i+1)).setOpaque(true);
+        }
+
+    }
+    
     @Override
     public void mouseClicked(MouseEvent me) {
         JLabel a = ((JLabel)me.getSource());
         Point p = (Point) ((a.getClientProperty("Location")));
-        a.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
         if(Client.canMove && Client.board.validMove(p.x,p.y )){
-            a.setText(Integer.toString(Client.user_id));
+            a.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+            a.setText(Integer.toString(Client.board.getTurn()));
             Client.input = "("+p.x+","+p.y+")";
             Client.button_pressed = true;     
         }

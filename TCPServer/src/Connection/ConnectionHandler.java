@@ -195,6 +195,7 @@ public class ConnectionHandler implements Runnable{
                     }
                 }
                 out.writeUTF("The winner is "+Server.room.getRoom(room_number).getLastUser());
+                out.writeUTF(Server.room.getRoom(room_number).getWinBoard());
                 out.writeUTF(inHall);
             }
         }
