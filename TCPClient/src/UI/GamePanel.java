@@ -64,9 +64,9 @@ public class GamePanel extends JPanel implements MouseListener {
     public void mouseClicked(MouseEvent me) {
         JLabel a = ((JLabel)me.getSource());
         Point p = (Point) ((a.getClientProperty("Location")));
-        a.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
         if(Client.canMove && Client.board.validMove(p.x,p.y )){
-            a.setText(Integer.toString(Client.user_id));
+            a.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+            a.setText(Integer.toString(Client.board.getTurn()));
             Client.input = "("+p.x+","+p.y+")";
             Client.button_pressed = true;     
         }

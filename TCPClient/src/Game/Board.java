@@ -117,7 +117,7 @@ public class Board {
     
     public int getTurn(){
         //MENGEMBALIKAN ID PLAYER YANG MENJADI PEMAIN DI GAME TERSEBUT
-        return Players.get(turn-1).getID();
+        return turn;
     }
     
     public void setTurn(int i){

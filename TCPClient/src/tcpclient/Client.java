@@ -6,6 +6,7 @@
 package tcpclient;
 
 import Game.*;
+import UI.Load;
 import UI.NewJFrame;
 import java.io.*;
 import java.net.Socket;
@@ -30,6 +31,7 @@ public class Client {
     private static WelcomePage welco;
     private static Lobby lobby;
     private static NewJFrame jf;
+    private static Load loadpage;
     public static int num_rooms;
     
     
@@ -97,6 +99,10 @@ public class Client {
                 updateRoom(room_state);
                 break;
             case "GAME":
+                lobby.setVisible(false);
+                loadpage= new Load();
+                loadpage.setVisible(true);
+
                 System.out.println("Welcome to the Board");
                 int id_board = Integer.parseInt(in.readUTF());
                 int num_players = Integer.parseInt(in.readUTF());
@@ -105,7 +111,7 @@ public class Client {
             case "START":
                 //GET ALL BOARD STATUS
                 System.out.println("Game has been started");
-                lobby.setVisible(false);
+                loadpage.setVisible(false);
                 jf = new NewJFrame(Name);
                 jf.setVisible(true);
                 String BoardStatus []= in.readUTF().split(" ");
