@@ -5,6 +5,7 @@
  */
 package Game;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 /**
@@ -21,6 +22,7 @@ public class Board {
     private boolean connected_players[];
     private int turn;
     private boolean won = false;
+    private Point idx1,idx2,idx3,idx4,idx5; // Point to store winning board
     private ArrayList<String> recent_moves;
    
     
@@ -162,6 +164,12 @@ public class Board {
         return won;
     }
     
+    public String getWinBoard(){
+        String s;
+        s = idx1.x + " " + idx1.y + " " + idx2.x + " " + idx2.y + " " + idx3.x + " " + idx3.y + " " + idx4.x + " " + idx4.y + " " + idx5.x + " " + idx5.y + " ";
+        return s;
+    }
+    
     public boolean isWin(){
         won = false;
         if(checkHorizontal(this.squares)){
@@ -194,6 +202,11 @@ public class Board {
         for (int i =0; i<size;i++){
             for(int j=0;j<=size-5;j++){
                 if ( a[i][j]!=0 && a[i][j]==a[i][j+1] && a[i][j]==a[i][j+2] && a[i][j]==a[i][j+3] && a[i][j]==a[i][j+4]){
+                    idx1= new Point(i,j);
+                    idx2= new Point(i,j+1);
+                    idx3= new Point(i,j+2);
+                    idx4= new Point(i,j+3);
+                    idx5= new Point(i,j+4);
                     return true;
                 }
             }
@@ -206,7 +219,12 @@ public class Board {
         
         for (int j =0; j<size;j++){
             for(int i=0;i<=size-5;i++){
-                if ( a[i][j]!=0 && a[i][j]==a[i][j] && a[i][j]==a[i][j] && a[i][j]==a[i+3][j] && a[i][j]==a[i+4][j]){
+                if ( a[i][j]!=0 && a[i][j]==a[i+1][j] && a[i][j]==a[i+2][j] && a[i][j]==a[i+3][j] && a[i][j]==a[i+4][j]){
+                    idx1= new Point(i,j);
+                    idx2= new Point(i+1,j);
+                    idx3= new Point(i+2,j);
+                    idx4= new Point(i+3,j);
+                    idx5= new Point(i+4,j);
                     return true;
                 }
             }
@@ -220,6 +238,11 @@ public class Board {
         for (int i =0; i<=size-5;i++){
             for(int j=0;j<=size-5;j++){
                 if ( a[i][j]!=0 && a[i][j]==a[i+1][j+1] && a[i][j]==a[i+2][j+2] && a[i][j]==a[i+3][j+3] && a[i][j]==a[i+4][j+4]){
+                    idx1= new Point(i,j);
+                    idx2= new Point(i+1,j+1);
+                    idx3= new Point(i+2,j+2);
+                    idx4= new Point(i+3,j+3);
+                    idx5= new Point(i+4,j+4);
                     return true;
                 }
             }
@@ -234,6 +257,11 @@ public class Board {
             for(int j=0;j<=size-5;j++){
                 //System.out.println(a[i][j] +" " + a[i-1][j+1] +" " + a[i-2][j+2] +" " + a[i-3][j+3] +" " + a[i-4][j+4]);
                 if ( a[i][j]!=0 && a[i][j]==a[i-1][j+1] && a[i][j]==a[i-2][j+2] && a[i][j]==a[i-3][j+3] && a[i][j]==a[i-4][j+4]){
+                    idx1= new Point(i,j);
+                    idx2= new Point(i-1,j+1);
+                    idx3= new Point(i-2,j+2);
+                    idx4= new Point(i-3,j+3);
+                    idx5= new Point(i-4,j+4);
                     return true;
                 }
             }

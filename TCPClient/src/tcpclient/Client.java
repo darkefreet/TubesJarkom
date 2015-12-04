@@ -159,6 +159,8 @@ public class Client {
                 }
                 String win_message = in.readUTF(); 
                 System.out.println(win_message);
+                String win_board = in.readUTF(); 
+                
                 break;
             default:
                 //do nothing
