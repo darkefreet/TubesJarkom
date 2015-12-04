@@ -167,6 +167,19 @@ public class Client {
                 System.out.println(win_message);
                 String win_board = in.readUTF(); 
                 jf.showWin(win_board);
+                jf.showExit();
+                while(!button_pressed){
+                    try {
+                        Thread.sleep(1000);
+                            //System.out.println(Server.room.getRoom(room_number).getListPlayers().size());
+                        } catch (InterruptedException e) {
+                             Thread.currentThread().interrupt();
+                        return;
+                    }
+                }
+                button_pressed = false;
+                jf.setVisible(false);
+                lobby.setVisible(true);
                 break;
             default:
                 //do nothing
