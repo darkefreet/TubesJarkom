@@ -62,7 +62,7 @@ public class Client {
                 System.out.println("Please input your username: ");
                 while(!button_pressed){
                     try {
-                    Thread.sleep(1000);
+                    Thread.sleep(500);
                         //System.out.println(Server.room.getRoom(room_number).getListPlayers().size());
                     } catch (InterruptedException e) {
                          Thread.currentThread().interrupt();
@@ -85,7 +85,7 @@ public class Client {
                 System.out.println("3.Refresh Room List (REFRESH)");
                 while(!button_pressed){
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(500);
                             //System.out.println(Server.room.getRoom(room_number).getListPlayers().size());
                         } catch (InterruptedException e) {
                              Thread.currentThread().interrupt();
@@ -100,6 +100,7 @@ public class Client {
                 updateRoom(room_state);
                 break;
             case "GAME":
+                lobby.setVisible(false);
                 System.out.println("Welcome to the Board");
                 int id_board = Integer.parseInt(in.readUTF());
                 int num_players = Integer.parseInt(in.readUTF());
@@ -130,7 +131,7 @@ public class Client {
             case "START":
                 //GET ALL BOARD STATUS
                 System.out.println("Game has been started");
-                loadpage.setVisible(false);
+                loadpage.dispose();
                 jf = new NewJFrame(Name);
                 jf.setVisible(true);
                 String BoardStatus []= in.readUTF().split(" ");
@@ -142,7 +143,7 @@ public class Client {
                 System.out.println("Users data has been loaded");
                 while(!board.getStatusWin()){
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(500);
                             //System.out.println(Server.room.getRoom(room_number).getListPlayers().size());
                         } catch (InterruptedException e) {
                              Thread.currentThread().interrupt();
@@ -170,7 +171,7 @@ public class Client {
                          System.out.println("Now is Your Move. Pick a move: ");
                          while(!button_pressed){
                             try {
-                                Thread.sleep(1000);
+                                Thread.sleep(500);
                                     //System.out.println(Server.room.getRoom(room_number).getListPlayers().size());
                                 } catch (InterruptedException e) {
                                      Thread.currentThread().interrupt();
@@ -189,7 +190,7 @@ public class Client {
                 jf.showExit();
                 while(!button_pressed){
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(500);
                             //System.out.println(Server.room.getRoom(room_number).getListPlayers().size());
                         } catch (InterruptedException e) {
                              Thread.currentThread().interrupt();
@@ -197,7 +198,8 @@ public class Client {
                     }
                 }
                 button_pressed = false;
-                jf.setVisible(false);
+                jf.dispose();
+                lobby = new Lobby();
                 lobby.setVisible(true);
                 break;
             default:
@@ -208,7 +210,7 @@ public class Client {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         // TODO code application logic here
         
       String serverName = "localhost";

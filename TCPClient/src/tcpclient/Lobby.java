@@ -152,7 +152,7 @@ public class Lobby extends javax.swing.JFrame {
             String x = String.valueOf(jComboBox1.getSelectedItem());
             Client.input = x;
             Client.button_pressed = true;
-            this.setVisible(false);
+            
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 

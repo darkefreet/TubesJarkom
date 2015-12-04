@@ -23,7 +23,7 @@ public class ConnectionHandler implements Runnable{
     private Player player;
     private String state;
     private int game_state;
-    private int room_number = 0;
+    private int room_number = -1;
     
     //nama-nama status
     private final String init = "INIT";
@@ -41,7 +41,7 @@ public class ConnectionHandler implements Runnable{
         player.setID(_id);
     }
     
-    public boolean isMyTurn(){
+    public boolean isMyTurn()throws IOException{
         if(Server.room.getRoom(room_number).getTurn()==player.getID()){
             return true;
         }
@@ -139,7 +139,7 @@ public class ConnectionHandler implements Runnable{
                 //WAIT UNTIL THE SERVER HAS ENOUGH PLAYERS
                 while(!Server.room.getRoom(room_number).isEnoughPlayer()){
                     try {
-                        Thread.sleep(5000);
+                        Thread.sleep(1000);
                         //System.out.println(Server.room.getRoom(room_number).getListPlayers().size());
                     } catch (InterruptedException e) {
                          Thread.currentThread().interrupt();
@@ -190,7 +190,6 @@ public class ConnectionHandler implements Runnable{
                         //memasukkan move ke dalam tabel
                         Server.room.getRoom(room_number).setBoardElement(x, y, Server.room.getRoom(room_number).getTurn());
                         Server.room.getRoom(room_number).nextMove();
-                        
                     }
                 }
                 out.writeUTF("The winner is "+Server.room.getRoom(room_number).getLastUser());
@@ -257,11 +256,12 @@ public class ConnectionHandler implements Runnable{
         server.close();
         
         } catch (IOException ioe) {
-            
-            for(int i = 0;i <Server.room.getRoom(room_number).getNum_players();i++){
-                if(Server.room.getRoom(room_number).getPlayer(i).getID()==player.getID()){
-                    Server.room.getRoom(room_number).setConnectedStatus(i,false);
-                    break;
+            if(room_number!=-1){
+                for(int i = 0;i <Server.room.getRoom(room_number).getNum_players();i++){
+                    if(Server.room.getRoom(room_number).getPlayer(i).getID()==player.getID()){
+                        Server.room.getRoom(room_number).setConnectedStatus(i,false);
+                        break;
+                    }
                 }
             }
             System.out.println("Client with id " + this.player.getID()+" is disconnected from room.");
