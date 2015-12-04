@@ -131,6 +131,13 @@ public class Client {
                         board.nextMove();
                      }
                      else{
+                        try {
+                            Thread.sleep(2000);
+                                //System.out.println(Server.room.getRoom(room_number).getListPlayers().size());
+                            } catch (InterruptedException e) {
+                                 Thread.currentThread().interrupt();
+                            return;
+                        }
                         canMove = true;
                          System.out.println("Now is Your Move. Pick a move: ");
                          while(!button_pressed){
@@ -144,6 +151,7 @@ public class Client {
                         }
                         button_pressed = false;
                         out.writeUTF(input);
+                        canMove = false;
                      }
                 }
                 break;

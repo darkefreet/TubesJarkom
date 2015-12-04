@@ -69,7 +69,6 @@ public class GamePanel extends JPanel implements MouseListener {
             
             Client.input = "("+p.x+","+p.y+")";
             Client.button_pressed = true;     
-            
         }
     }
 
