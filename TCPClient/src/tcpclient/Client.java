@@ -111,7 +111,7 @@ public class Client {
             case "START":
                 //GET ALL BOARD STATUS
                 System.out.println("Game has been started");
-                lobby.setVisible(false);
+                loadpage.setVisible(false);
                 jf = new NewJFrame(Name);
                 jf.setVisible(true);
                 String BoardStatus []= in.readUTF().split(" ");
@@ -166,7 +166,7 @@ public class Client {
                 String win_message = in.readUTF(); 
                 System.out.println(win_message);
                 String win_board = in.readUTF(); 
-                
+                jf.showWin(win_board);
                 break;
             default:
                 //do nothing

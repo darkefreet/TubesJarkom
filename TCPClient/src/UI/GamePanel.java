@@ -5,6 +5,7 @@
  */
 package UI;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Point;
@@ -58,6 +59,19 @@ public class GamePanel extends JPanel implements MouseListener {
                 al.get(i).get(j).setText(Integer.toString(Client.board.getBoardElement(i, j)));
             }
         }
+    }
+    
+    public void showWin(String input){
+        ArrayList<Integer> list = new ArrayList<>();
+        for (String s : input.split("\\s"))  
+        {  
+           list.add(Integer.parseInt(s));  
+        }
+        for(int i = 0 ; i < list.size() ; i+=2){
+            al.get(list.get(i)).get(list.get(i+1)).setBackground(Color.red);
+            al.get(list.get(i)).get(list.get(i+1)).setOpaque(true);
+        }
+
     }
     
     @Override

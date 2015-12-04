@@ -40,6 +40,10 @@ public class NewJFrame extends javax.swing.JFrame {
     public void refresh(){
         gamePanel2.refresh();
     }
+    
+    public void showWin(String input){
+        gamePanel2.showWin(input);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
