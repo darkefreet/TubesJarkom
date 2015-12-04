@@ -168,5 +168,8 @@ public class Board {
         }
         return false;
     }
-        
+    
+    public boolean validMove(int i, int j){
+        return getBoardElement(i,j)==0;
+    }
 }

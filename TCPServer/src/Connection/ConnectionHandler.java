@@ -154,6 +154,7 @@ public class ConnectionHandler implements Runnable{
                         //memasukkan move ke dalam tabel
                         Server.room.getRoom(room_number).setBoardElement(x, y, Server.room.getRoom(room_number).getTurn());
                         Server.room.getRoom(room_number).nextMove();
+                        
                     }
                 }
                 out.writeUTF("The winner is "+Server.room.getRoom(room_number).getLastUser());
